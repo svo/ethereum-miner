@@ -1,0 +1,72 @@
+
+    - name: Create directory
+      file: dest={{ item }} state=directory owner=jenkins group=jenkins
+      with_items:
+        - /var/lib/jenkins/backups
+        - /var/lib/jenkins/backups/FULL-1970-01-01_00-00
+      become: yes
+
+    - name: Wait for jenkins configuration to be available
+      wait_for: path=/var/lib/jenkins/config.xml state=present
+      become: yes
+
+    - name: Disable security
+      lineinfile: dest=/var/lib/jenkins/config.xml regexp='<useSecurity>true</useSecurity>' line='<useSecurity>false</useSecurity>'
+      become: yes
+
+    - name: Install Jenkins plugins
+      shell: java -jar ~/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
+      become: yes
+      with_items:
+      - git
+      - thinBackup
+      notify:
+      - Restart Jenkins
+
+    - name: Restart Jenkins
+      action: service name=jenkins state=restarted
+      become: yes
+
+    - name: Wait for Jenkins port to be available
+      wait_for: port=8080
+
+    - name: Wait for Jenkins to be available
+      uri: url=http://localhost:8080 return_content=yes
+      register: response
+      until: response.status == 200
+      retries: 10
+      delay: 10
+
+    - name: Add vagrant user to user groups
+      user: name=vagrant groups={{ item }} append=yes
+      with_items:
+      - docker
+      - pcp
+      become: yes
+
+    - name: Add jenkins user to user groups
+      user: name=jenkins groups={{ item }} append=yes
+      with_items:
+      - docker
+      - pcp
+      become: yes
+
+    - name: Enable docker REST API
+      lineinfile: dest=/etc/default/docker line='DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock --insecure-registry localhost:5000"'
+      notify:
+      - Restart docker
+      become: yes
+
+    - name: Unpack Jenkins config
+      unarchive: src=backup.tar.gz dest=/var/lib/jenkins/backups/FULL-1970-01-01_00-00
+      become: yes
+
+    - name: Prime backup configuration
+      uri: method=POST HEADER_Content-Type="application/x-www-form-urlencoded" body="backupPath=%2Fvar%2Flib%2Fjenkins%2Fbackups&fullBackupSchedule=&diffBackupSchedule=&nrMaxStoredFull=5&excludedFilesRegex=&waitForIdle=on&forceQuietModeTimeout=120&backupAdditionalFilesRegex=&json=%7B%22backupPath%22%3A+%22%2Fvar%2Flib%2Fjenkins%2Fbackups%22%2C+%22fullBackupSchedule%22%3A+%22%22%2C+%22diffBackupSchedule%22%3A+%22%22%2C+%22nrMaxStoredFull%22%3A+%225%22%2C+%22excludedFilesRegex%22%3A+%22%22%2C+%22waitForIdle%22%3A+%7B%22forceQuietModeTimeout%22%3A+%22120%22%7D%7D&Submit=Save" url=http://localhost:8080/thinBackup/saveSettings status_code=302
+
+    - name: Restore configuration
+      uri: method=POST HEADER_Content-Type="application/x-www-form-urlencoded" body="restoreBackupFrom=1970-01-01%2000%3A00&json=%7B%27restoreBackupFrom%27%3A%20%271970-01-01%2000%3A00%27%7D&Submit=Restore" url=http://localhost:8080/thinBackup/restore status_code=302 timeout=120
+
+    - name: Reload configuration
+      shell: java -jar ~/jenkins-cli.jar -s http://localhost:8080/ reload-configuration
+      become: yes
