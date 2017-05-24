@@ -1,4 +1,12 @@
 
+    - name: Install aptitude
+      apt: pkg=aptitude update_cache=yes
+      become: yes
+
+    - name: Apt update/upgrade
+      apt: upgrade=yes update_cache=yes
+      become: yes
+
     - name: Get CUDA repository
       get_url: url=http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/cuda-repo-ubuntu1404_7.5-18_amd64.deb dest=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
       register: cuda_get_url_result
@@ -8,14 +16,6 @@
 
     - name: Install CUDA repository
       apt: deb=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
-      become: yes
-
-    - name: Install aptitude
-      apt: pkg=aptitude update_cache=yes
-      become: yes
-
-    - name: Apt update/upgrade
-      apt: upgrade=yes update_cache=yes
       become: yes
 
     - name: Install required packages
