@@ -61,3 +61,17 @@
     - name: Install CUDA
       apt: pkg=cuda
       become: yes
+
+    - name: Add ethereum repositories
+      apt_repository: repo={{ item }} update_cache=yes
+      become: yes
+      with_items:
+      - ppa:ethereum/ethereum
+      - ppa:ethereum/ethereum-qt
+
+    - name: Install ethereum CLI tools
+      apt: pkg={{ item }}
+      become: yes
+      with_items:
+      - ethereum
+      - cpp-ethereum
