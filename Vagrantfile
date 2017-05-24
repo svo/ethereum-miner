@@ -4,7 +4,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.define "test", primary: true do |test|
+  config.vm.define "test" do |test|
     test.vm.hostname = "vagrant-ethereum-miner-test"
     test.vm.network :private_network, type: "dhcp"
 
