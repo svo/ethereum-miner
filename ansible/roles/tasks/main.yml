@@ -1,0 +1,54 @@
+
+    - name: Get CUDA repository
+      get_url: url=http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/cuda-repo-ubuntu1404_7.5-18_amd64.deb dest=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
+      register: cuda_get_url_result
+      until: cuda_get_url_result | succeeded
+      retries: 3
+      delay: 1
+
+    - name: Install CUDA repository
+      apt: deb=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
+      become: yes
+
+    - name: Apt update/upgrade
+      apt: upgrade=yes update_cache=yes
+      become: yes
+
+    - name: Install required packages
+      apt: pkg={{ item }}
+      become: yes
+      with_items:
+      - opencl-headers
+      - build-essential
+      - protobuf-compiler
+      - libprotoc-dev
+      - libboost-all-dev
+      - libleveldb-dev
+      - hdf5-tools
+      - libhdf5-serial-dev
+      - libopencv-core-dev
+      - libopencv-highgui-dev
+      - libsnappy-dev
+      - libsnappy1
+      - libatlas-base-dev
+      - cmake
+      - libstdc++6-4.8-dbg
+      - libgoogle-glog0
+      - libgoogle-glog-dev
+      - libgflags-dev
+      - liblmdb-dev
+      - git
+      - python-pip
+      - gfortran
+
+    - name: DRM module workaround
+      apt: name={{ item }}
+      become: yes
+      with_items:
+      - linux-image-extra-{{ ansible_kernel }}
+      - linux-headers-{{ ansible_kernel }}
+      - linux-image-{{ ansible_kernel }}
+
+    - name: Install CUDA
+      apt: pkg=cuda
+      become: yes

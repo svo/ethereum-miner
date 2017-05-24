@@ -1,0 +1,18 @@
+[submodule "ansible/roles/environment-core"]
+	path = ansible/roles/environment-core
+	url = git@github.com:svo/environment-core.git
+[submodule "ansible/roles/environment-openjdk"]
+	path = ansible/roles/environment-openjdk
+	url = git@github.com:svo/environment-openjdk.git
+[submodule "ansible/roles/environment-jenkins"]
+	path = ansible/roles/environment-jenkins
+	url = git@github.com:svo/environment-jenkins.git
+[submodule "ansible/roles/environment-docker"]
+	path = ansible/roles/environment-docker
+	url = git@github.com:svo/environment-docker.git
+[submodule "ansible/roles/environment-vagrant"]
+	path = ansible/roles/environment-vagrant
+	url = git@github.com:svo/environment-vagrant.git
+[submodule "ansible/roles/environment-configuration-management"]
+	path = ansible/roles/environment-configuration-management
+	url = git@github.com:svo/environment-configuration-management.git

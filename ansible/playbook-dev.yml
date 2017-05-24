@@ -1,0 +1,8 @@
+---
+- hosts: all
+
+  roles:
+
+    - environment-core
+    - environment-docker
+    - environment-configuration-management

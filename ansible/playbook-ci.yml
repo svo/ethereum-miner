@@ -1,0 +1,12 @@
+---
+- hosts: all
+
+  roles:
+
+    - environment-core
+    - environment-openjdk
+    - environment-jenkins
+    - environment-docker
+    - environment-vagrant
+    - environment-configuration-management
+    - continuous-integration
