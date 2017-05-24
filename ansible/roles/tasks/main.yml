@@ -24,6 +24,10 @@
       when: cuda_repository_is_installed | failed
       become: yes
 
+    - name: Apt update
+      apt: update_cache=yes
+      become: yes
+
     - name: Install required packages
       apt: pkg={{ item }}
       become: yes
