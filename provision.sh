@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ansible-playbook --private-key ~/.ssh/svo.pem -u ubuntu -i "$1," ansible/playbook.yml
+ansible-playbook --private-key $1 -u ubuntu -i "$2," ansible/playbook.yml
