@@ -17,6 +17,7 @@
     - name: Check if CUDA repository installed
       command: dpkg-query -l cuda-repo-ubuntu1404
       register: cuda_repository_is_installed
+      ignore_errors: yes
 
     - name: Install CUDA repository
       apt: deb=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
