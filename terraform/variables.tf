@@ -3,6 +3,10 @@ variable "aws_region" {
   default = "ap-southeast-2"
 }
 
+variable "key_name" {
+  description = "The Key Pair"
+}
+
 variable "aws_amis" {
   default = {
     "ap-northeast-1" = "ami-936d9d93"

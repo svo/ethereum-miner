@@ -80,3 +80,7 @@
       with_items:
       - ethereum
       - cpp-ethereum
+
+    - name: Install tmux terminal multiplexer
+      apt: pkg=tmux
+      become: yes
