@@ -9,14 +9,14 @@ variable "key_name" {
 
 variable "aws_amis" {
   default = {
-    "ap-northeast-1" = "ami-936d9d93"
-    "ap-southeast-1" = "ami-96f1c1c4"
-    "ap-southeast-2" = "ami-69631053"
-    "eu-central-1" = "ami-accff2b1"
-    "eu-west-1" = "ami-47a23a30"
-    "sa-east-1" = "ami-4d883350"
-    "us-east-1" = "ami-d05e75b8"
-    "us-west-1" = "ami-df6a8b9b"
-    "us-west-2" = "ami-5189a661"
+    "ap-northeast-1" = "ami-1de1df7a"
+    "ap-southeast-1" = "ami-93ef68f0"
+    "ap-southeast-2" = "ami-1e01147d"
+    "eu-central-1" = "ami-a74c95c8"
+    "eu-west-1" = "ami-6c101b0a"
+    "sa-east-1" = "ami-4bd8b727"
+    "us-east-1" = "ami-20631a36"
+    "us-west-1" = "ami-9fe6c7ff"
+    "us-west-2" = "ami-45224425"
   }
 }

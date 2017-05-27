@@ -1,70 +1,44 @@
 
     - name: Install aptitude
-      apt: pkg=aptitude update_cache=yes
+      apt: pkg=aptitude
       become: yes
 
     - name: Apt update/upgrade
       apt: upgrade=yes update_cache=yes
       become: yes
 
-    - name: Get CUDA repository
-      get_url: url=http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/cuda-repo-ubuntu1404_7.5-18_amd64.deb dest=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
-      register: cuda_get_url_result
-      until: cuda_get_url_result | succeeded
-      retries: 3
-      delay: 1
-
-    - name: Check if CUDA repository installed
-      command: dpkg-query -l cuda-repo-ubuntu1404
-      register: cuda_repository_is_installed
-      ignore_errors: yes
-
-    - name: Install CUDA repository
-      apt: deb=/tmp/cuda-repo-ubuntu1404_7.5-18_amd64.deb
-      when: cuda_repository_is_installed | failed
-      become: yes
-
-    - name: Apt update
-      apt: update_cache=yes
+    - name: Install tmux terminal multiplexer
+      apt: pkg=tmux
       become: yes
 
     - name: Install required packages
       apt: pkg={{ item }}
       become: yes
       with_items:
-      - opencl-headers
-      - build-essential
-      - protobuf-compiler
-      - libprotoc-dev
-      - libboost-all-dev
-      - libleveldb-dev
-      - hdf5-tools
-      - libhdf5-serial-dev
-      - libopencv-core-dev
-      - libopencv-highgui-dev
-      - libsnappy-dev
-      - libsnappy1
-      - libatlas-base-dev
-      - cmake
-      - libstdc++6-4.8-dbg
-      - libgoogle-glog0
-      - libgoogle-glog-dev
-      - libgflags-dev
-      - liblmdb-dev
       - git
-      - python-pip
-      - gfortran
+      - cmake
+      - libleveldb-dev
+      - libjsoncpp-dev
+      - libjsonrpccpp-dev
+      - libboost-all-dev
+      - libgmp-dev
+      - libreadline-dev
+      - libcurl4-gnutls-dev
+      - ocl-icd-libopencl1
+      - opencl-headers
+      - mesa-common-dev
+      - libmicrohttpd-dev
+      - build-essential
 
-    - name: DRM module workaround
-      apt: name={{ item }}
-      become: yes
-      with_items:
-      - linux-image-extra-{{ ansible_kernel }}
-      - linux-headers-{{ ansible_kernel }}
-      - linux-image-{{ ansible_kernel }}
+    - name: Download CUDA repository .deb
+      get_url: url=http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb dest=/tmp/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+      register: get_deb_result
+      until: get_deb_result | succeeded
+      retries: 3
+      delay: 1
 
-    - name: Install CUDA
-      apt: pkg=cuda
+    - name: Install CUDA repository
+      apt: deb=/tmp/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
       become: yes
 
     - name: Add ethereum repositories
@@ -72,15 +46,32 @@
       become: yes
       with_items:
       - ppa:ethereum/ethereum
-      - ppa:ethereum/ethereum-qt
+
+    - name: Install CUDA
+      apt: pkg=cuda
+      become: yes
+
+    - name: Install CryptoPP
+      apt: pkg={{ item }}
+      become: yes
+      with_items:
+      - libcryptopp-utils
+      - libcryptopp-dev
 
     - name: Install ethereum CLI tools
       apt: pkg={{ item }}
       become: yes
       with_items:
       - ethereum
-      - cpp-ethereum
 
-    - name: Install tmux terminal multiplexer
-      apt: pkg=tmux
-      become: yes
+    - name: Get cpp-ethereum
+      git: repo=https://github.com/Genoil/cpp-ethereum/ dest=~/cpp-ethereum
+
+    - name: Setup build directory
+      file: path=~/cpp-ethereum/build state=directory
+
+    - name: cmake cpp-ethereum
+      command: cmake -DBUNDLE=cudaminer .. chdir=~/cpp-ethereum/build
+
+    - name: make cpp-ethereum
+      command: make -j8 chdir=~/cpp-ethereum/build
