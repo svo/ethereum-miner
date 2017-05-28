@@ -8,7 +8,7 @@ resource "aws_instance" "miner" {
   key_name = "${var.key_name}"
 
   root_block_device {
-    volume_size = "48"
+    volume_size = "100"
   }
 
   count = 1
