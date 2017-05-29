@@ -75,7 +75,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ci.vm.synced_folder ".", "/vagrant"
 
     ci.vm.provider :virtualbox do |vb|
-      vb.memory = 3072
+      vb.memory = 4096
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
   end
