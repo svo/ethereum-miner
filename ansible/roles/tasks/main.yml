@@ -29,6 +29,7 @@
       - mesa-common-dev
       - libmicrohttpd-dev
       - build-essential
+      - htop
 
     - name: Download CUDA repository .deb
       get_url: url=http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb dest=/tmp/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
@@ -63,6 +64,7 @@
       become: yes
       with_items:
       - ethereum
+      - ethminer
 
     - name: Get cpp-ethereum
       git: repo=https://github.com/Genoil/cpp-ethereum/ dest=~/cpp-ethereum
