@@ -2,10 +2,14 @@
 
 The purpose of this project is to provide mechanisms for developing, testing and deploying Ethereum miners.
 
-NOTES
-- this project uses git submodules so you will want to clone recursively to have all expected behaviours.
+__Donations:__ if you find this project helpful I suggest donating to the owner of _cpp-ethereum_ via __ETH__ address `0xeb9310b185455f863f526dab3d245809f6854b4d`. Donations to myself also appreciated at __ETH__ address: `0x732deB77C2aC91DDedb41B4174aDbAfc5b0D2689`.
 
-`git clone --recursive git@github.com:svo/ethereum-miner.git`
+
+__NOTES:__ this project uses git submodules so you will want to clone recursively to have all expected behaviours.
+
+```
+git clone --recursive git@github.com:svo/ethereum-miner.git
+```
 
 ## Setup
 
@@ -33,7 +37,7 @@ cd /vagrant
 
 Jenkins builds on commits and is available at: http://vagrant-ethereum-miner-ci.local:8080/
 
-## Build Instance
+## Build EC2 Instance
 
 ```
 vagrant ssh
@@ -42,12 +46,22 @@ cd /vagrant/terraform
 terraform apply
 ```
 
-## Provision Instance
+## Provisioning
+
+### Provision Instance
 
 ```
 vagrant ssh
 cd /vagrant
 ./provision.sh <path-to-private-key> <ip-for-instance>
+```
+
+### Provision Instance/s By IP/DNS
+
+Create an `ansible_hosts` file with the IP/DNS for the Virtual Machine/s then:
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --private-key <path-to-private-key> -u <username> -i ansible_hosts ansible/playbook.yml
 ```
 
 ## Running Miner
