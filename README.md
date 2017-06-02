@@ -2,7 +2,7 @@
 
 The purpose of this project is to provide mechanisms for developing, testing and deploying Ethereum miners.
 
-__Donations:__ if you find this project helpful I suggest donating to the owner of _cpp-ethereum_ via __ETH__ address `0xeb9310b185455f863f526dab3d245809f6854b4d`. Donations to myself also appreciated at __ETH__ address: `0x732deB77C2aC91DDedb41B4174aDbAfc5b0D2689`.
+__Donations:__ if you find this project helpful I suggest donating to the owner of [cpp-ethereum](https://github.com/Genoil/cpp-ethereum) via __ETH__ address `0xeb9310b185455f863f526dab3d245809f6854b4d`. Donations to myself also appreciated at __ETH__ address: `0x732deB77C2aC91DDedb41B4174aDbAfc5b0D2689`.
 
 
 __NOTES:__ this project uses git submodules so you will want to clone recursively to have all expected behaviours.
